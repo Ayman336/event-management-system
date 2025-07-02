@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Event Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <header>
+        <h1>Event Management System</h1>
+        <nav>
+            {% if current_user.is_authenticated %}
+                <span>Welcome, {{ current_user.name }}!</span>
+                {% if current_user.role == 'admin' %}
+                    <a href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a>
+                {% elif current_user.role == 'organizer' %}
+                    <a href="{{ url_for('organizer_dashboard') }}">Organizer Dashboard</a>
+                {% else %}
+                    <a href="{{ url_for('user_dashboard') }}">My Events</a>
+                {% endif %}
+                <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+                <a href="{{ url_for('register') }}">Register</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main>
+        <section>
+            <h2>Upcoming Events</h2>
+            {% if events %}
+                <ul class="event-list">
+                    {% for event in events %}
+                        <li class="event-item">
+                            <h3>{{ event.title }}</h3>
+                            <p>{{ event.description }}</p>
+                            <p><strong>Date:</strong> {{ event.date.strftime('%Y-%m-%d') }}</p>
+                            <a href="{{ url_for('event_detail', event_id=event.event_id) }}">View Details</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No upcoming events at the moment.</p>
+            {% endif %}
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; {{ current_year }} Event Management System. All rights reserved.</p>
+    </footer>
+</body>
+</html>
