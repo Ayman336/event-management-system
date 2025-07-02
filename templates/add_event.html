@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-100">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h3 class="text-2xl font-bold text-gray-800 text-center mb-6">Add Event</h3>
+        <form method="post" x-data="{ title: '', description: '', date: '', location: '', venue_id: '' }">
+            <div class="mb-4">
+                <input 
+                    type="text" 
+                    name="title" 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200" 
+                    placeholder="Event Title" 
+                    required
+                    x-model="title"
+                    :class="{ 'border-red-500': title && title.length < 3 }"
+                >
+                <p class="text-sm text-red-500 mt-1" x-show="title && title.length < 3">Title must be at least 3 characters</p>
+            </div>
+            <div class="mb-4">
+                <textarea 
+                    name="description" 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200" 
+                    placeholder="Description"
+                    x-model="description"
+                    :class="{ 'border-red-500': description && description.length > 500 }"
+                ></textarea>
+                <p class="text-sm text-gray-500 mt-1" x-text="description.length + '/500 characters'"></p>
+            </div>
+            <div class="mb-4">
+                <input 
+                    type="date" 
+                    name="date" 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200" 
+                    required
+                    x-model="date"
+                    :class="{ 'border-red-500': !date }"
+                >
+                <p class="text-sm text-red-500 mt-1" x-show="!date && title">Please select a date</p>
+            </div>
+            <div class="mb-4">
+                <input 
+                    type="text" 
+                    name="location" 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200" 
+                    placeholder="Location" 
+                    required
+                    x-model="location"
+                    :class="{ 'border-red-500': location && location.length < 3 }"
+                >
+                <p class="text-sm text-red-500 mt-1" x-show="location && location.length < 3">Location must be at least 3 characters</p>
+            </div>
+            <div class="mb-6">
+                <select 
+                    name="venue_id" 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200" 
+                    required
+                    x-model="venue_id"
+                    :class="{ 'border-red-500': !venue_id }"
+                >
+                    <option value="" disabled selected>Select Venue</option>
+                    {% for venue in venues %}
+                        <option value="{{ venue.venue_id }}">{{ venue.name }}</option>
+                    {% endfor %}
+                </select>
+                <p class="text-sm text-red-500 mt-1" x-show="!venue_id && title">Please select a venue</p>
+            </div>
+            <button 
+                type="submit"
+                class="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition duration-200 font-semibold"
+                :disabled="!title || !date || !location || !venue_id || title.length < 3 || location.length < 3 || (description && description.length > 500)"
+                :class="{ 'opacity-50 cursor-not-allowed': !title || !date || !location || !venue_id || title.length < 3 || location.length < 3 || (description && description.length > 500) }"
+            >
+                Create Event
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Static Data for Demonstration -->
+{% set venues = [
+    {'venue_id': 1, 'name': 'Convention Center'},
+    {'venue_id': 2, 'name': 'City Park Pavilion'},
+    {'venue_id': 3, 'name': 'Downtown Gallery'},
+    {'venue_id': 4, 'name': 'Community Hall'}
+] %}
+{% endblock %}

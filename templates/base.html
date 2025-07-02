@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Management System</title>
+    <!-- Tailwind CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Alpine.js CDN -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <!-- Navbar -->
+    <nav class="bg-gray-800 text-white shadow-lg" x-data="{ isOpen: false }">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a class="text-xl font-bold" href="{{ url_for('dashboard') }}">EventMgmt</a>
+            <div class="flex items-center space-x-4">
+                {% if session.get('user_id') %}
+                    <span class="text-gray-300">Welcome, {{ session.get('user_name') }}</span>
+                    <a href="{{ url_for('logout') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded-md transition duration-200">Logout</a>
+                {% endif %}
+                <!-- Mobile Menu Toggle -->
+                <button @click="isOpen = !isOpen" class="md:hidden focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="isOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'"></path>
+                    </svg>
+                </button>
+            </div>
+            <!-- Mobile Menu -->
+            <div x-show="isOpen" class="md:hidden absolute top-16 left-0 right-0 bg-gray-800 p-4" @click.away="isOpen = false">
+                {% if session.get('user_id') %}
+                    <div class="flex flex-col space-y-2">
+                        <span class="text-gray-300">Welcome, {{ session.get('user_name') }}</span>
+                        <a href="{{ url_for('logout') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded-md text-center">Logout</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-6">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div x-data="{ show: true }" x-show="show" class="space-y-2">
+                {% for category, message in messages %}
+                    <div class="flex justify-between items-center p-4 rounded-md text-white 
+                        {% if category == 'success' %} bg-green-500 
+                        {% elif category == 'danger' %} bg-red-500 
+                        {% elif category == 'warning' %} bg-yellow-500 
+                        {% else %} bg-blue-500 {% endif %}">
+                        <span>{{ message }}</span>
+                        <button @click="show = false" class="text-white hover:text-gray-200 focus:outline-none">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% endwith %}
+
+        <!-- Content Block -->
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

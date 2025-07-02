@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-5xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold text-gray-800">Events</h3>
+            {% if role == 'organizer' %}
+                <a 
+                    href="{{ url_for('add_event') }}" 
+                    class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-200 font-semibold"
+                >
+                    Add Event
+                </a>
+            {% endif %}
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="bg-indigo-600 text-white">
+                        <th class="p-3 rounded-tl-md">Title</th>
+                        <th class="p-3">Date</th>
+                        <th class="p-3">Location</th>
+                        <th class="p-3">Venue</th>
+                        <th class="p-3 rounded-tr-md">Action</th>
+                    </tr>
+                </thead>
+                <tbody x-data="{ openRows: [] }" x-init="openRows = new Array({{ events | length }}).fill(false)">
+                    {% for event in events %}
+                        <tr class="border-b border-gray-200 hover:bg-gray-50 transition duration-200">
+                            <td class="p-3">{{ event.title }}</td>
+                            <td class="p-3">{{ event.date }}</td>
+                            <td class="p-3">{{ event.location }}</td>
+                            <td class="p-3">{{ event.venue_name }}</td>
+                            <td class="p-3">
+                                <a 
+                                    href="{{ url_for('event_detail', event_id=event.event_id) }}" 
+                                    class="px-3 py-1 bg-indigo-100 text-indigo-600 rounded-md hover:bg-indigo-200 transition duration-200 font-semibold"
+                                >
+                                    Details
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Static Data for Demonstration -->
+{% set events = [
+    {'event_id': 1, 'title': 'Tech Conference 2025', 'date': '2025-06-15', 'location': 'San Francisco, CA', 'venue_name': 'Convention Center'},
+    {'event_id': 2, 'title': 'Music Festival', 'date': '2025-07-10', 'location': 'San Francisco, CA', 'venue_name': 'City Park Pavilion'},
+    {'event_id': 3, 'title': 'Art Exhibition', 'date': '2025-06-20', 'location': 'San Francisco, CA', 'venue_name': 'Downtown Gallery'},
+    {'event_id': 4, 'title': 'Charity Run', 'date': '2025-08-05', 'location': 'San Francisco, CA', 'venue_name': 'Community Hall'}
+] %}
+{% endblock %}
