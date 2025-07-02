@@ -2,53 +2,83 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Event Management System</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Management System</title>
+    <!-- Flask Jinja2 Templating: Dynamically link the CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}" type="image/x-icon">
 </head>
-<body>
-    <header>
-        <h1>Event Management System</h1>
-        <nav>
-            {% if current_user.is_authenticated %}
-                <span>Welcome, {{ current_user.name }}!</span>
-                {% if current_user.role == 'admin' %}
-                    <a href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a>
-                {% elif current_user.role == 'organizer' %}
-                    <a href="{{ url_for('organizer_dashboard') }}">Organizer Dashboard</a>
-                {% else %}
-                    <a href="{{ url_for('user_dashboard') }}">My Events</a>
-                {% endif %}
-                <a href="{{ url_for('logout') }}">Logout</a>
-            {% else %}
-                <a href="{{ url_for('login') }}">Login</a>
-                <a href="{{ url_for('register') }}">Register</a>
-            {% endif %}
-        </nav>
-    </header>
+<body class="bg-gray-100">
 
-    <main>
-        <section>
-            <h2>Upcoming Events</h2>
-            {% if events %}
-                <ul class="event-list">
-                    {% for event in events %}
-                        <li class="event-item">
-                            <h3>{{ event.title }}</h3>
-                            <p>{{ event.description }}</p>
-                            <p><strong>Date:</strong> {{ event.date.strftime('%Y-%m-%d') }}</p>
-                            <a href="{{ url_for('event_detail', event_id=event.event_id) }}">View Details</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>No upcoming events at the moment.</p>
-            {% endif %}
-        </section>
-    </main>
+    <!-- Navbar -->
+    <nav class="bg-blue-600 p-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="#" class="text-white text-3xl font-bold">EMS</a>
+            <div class="space-x-4">
+                <a href="#events" class="text-white">Events</a>
+                <a href="#about" class="text-white">About</a>
+                <a href="#contact" class="text-white">Contact</a>
+                <a href="{{ url_for('login') }}" class="text-white">Login</a>
+                <a href="{{ url_for('register') }}" class="bg-yellow-500 text-white py-2 px-4 rounded-lg">Register</a>
+            </div>
+        </div>
+    </nav>
 
-    <footer>
-        <p>&copy; {{ current_year }} Event Management System. All rights reserved.</p>
+    <!-- Hero Section -->
+    <section class="bg-blue-500 text-white text-center py-20">
+        <h1 class="text-5xl font-extrabold">Welcome to the Event Management System</h1>
+        <p class="mt-4 text-lg">Streamline your events, manage attendees, and enjoy seamless ticketing and feedback collection.</p>
+    </section>
+
+    <!-- Featured Events Section -->
+    <section id="events" class="py-20">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">Upcoming Events</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Event 1 -->
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <img src="{{ url_for('static', filename='images/event1.jpg') }}" alt="Event 1" class="w-full h-48 object-cover rounded-lg">
+                    <h3 class="text-xl font-semibold mt-4">Event Title 1</h3>
+                    <p class="text-gray-500 mt-2">Location: Venue 1</p>
+                    <p class="text-gray-700 mt-4">Date: 20th August 2025</p>
+                    <a href="{{ url_for('event_details', event_id=1) }}" class="bg-blue-600 text-white py-2 px-4 mt-4 inline-block rounded-lg">View Details</a>
+                </div>
+                <!-- Event 2 -->
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <img src="{{ url_for('static', filename='images/event2.jpg') }}" alt="Event 2" class="w-full h-48 object-cover rounded-lg">
+                    <h3 class="text-xl font-semibold mt-4">Event Title 2</h3>
+                    <p class="text-gray-500 mt-2">Location: Venue 2</p>
+                    <p class="text-gray-700 mt-4">Date: 25th August 2025</p>
+                    <a href="{{ url_for('event_details', event_id=2) }}" class="bg-blue-600 text-white py-2 px-4 mt-4 inline-block rounded-lg">View Details</a>
+                </div>
+                <!-- Event 3 -->
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <img src="{{ url_for('static', filename='images/event3.jpg') }}" alt="Event 3" class="w-full h-48 object-cover rounded-lg">
+                    <h3 class="text-xl font-semibold mt-4">Event Title 3</h3>
+                    <p class="text-gray-500 mt-2">Location: Venue 3</p>
+                    <p class="text-gray-700 mt-4">Date: 30th August 2025</p>
+                    <a href="{{ url_for('event_details', event_id=3) }}" class="bg-blue-600 text-white py-2 px-4 mt-4 inline-block rounded-lg">View Details</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-gray-200">
+        <div class="max-w-7xl mx-auto text-center">
+            <h2 class="text-3xl font-bold mb-6">About EMS</h2>
+            <p class="text-lg">The Event Management System (EMS) is designed to help event organizers plan and manage their events, handle ticketing, and gather feedback from attendees. It aims to provide an easy-to-use platform that makes organizing events more efficient and less time-consuming.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-blue-600 text-white py-6">
+        <div class="max-w-7xl mx-auto text-center">
+            <p>&copy; 2025 Event Management System. All rights reserved.</p>
+        </div>
     </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
 </body>
 </html>
